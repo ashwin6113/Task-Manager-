@@ -1,7 +1,13 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'user_profile_model.dart';
 
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
 _$UserProfileModelImpl _$$UserProfileModelImplFromJson(
-        JSONObject json,) =>
+        Map<String, dynamic> json) =>
     _$UserProfileModelImpl(
       uid: json['uid'] as String,
       name: json['name'] as String,
@@ -11,7 +17,7 @@ _$UserProfileModelImpl _$$UserProfileModelImplFromJson(
     );
 
 Map<String, dynamic> _$$UserProfileModelImplToJson(
-        _$UserProfileModelImpl instance,) =>
+        _$UserProfileModelImpl instance) =>
     <String, dynamic>{
       'uid': instance.uid,
       'name': instance.name,
