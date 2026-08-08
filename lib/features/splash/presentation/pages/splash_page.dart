@@ -24,13 +24,17 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       // Wait momentarily for the initial stream state to settle
       await Future.delayed(const Duration(milliseconds: 800));
       
-      final authState = ref.read(authStateChangesProvider);
-      final userUid = authState.valueOrNull;
+      final isSessionValid = await ref.read(isSessionValidProvider.future);
 
       if (mounted) {
-        if (userUid == null) {
+        if (!isSessionValid) {
           context.goNamed(RouteNames.login);
         } else {
+          final userUid = ref.read(authStateChangesProvider).valueOrNull;
+          if (userUid == null) {
+            context.goNamed(RouteNames.login);
+            return;
+          }
           // Fetch profile
           final profile = await ref.read(getProfileUseCaseProvider)(userUid);
           if (mounted) {

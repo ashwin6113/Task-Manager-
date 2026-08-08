@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/services/secure_storage_service.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/datasources/profile_remote_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
@@ -11,6 +12,7 @@ import '../../domain/usecases/get_profile_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
+
 
 // ── Firebase Core Clients ──
 final firebaseAuthProvider = Provider<firebase_auth.FirebaseAuth>((ref) => firebase_auth.FirebaseAuth.instance);
@@ -56,3 +58,14 @@ final authStateChangesProvider = StreamProvider<String?>((ref) {
 });
 
 final userProfileProvider = StateProvider<UserProfileEntity?>((ref) => null);
+
+final isSessionValidProvider = FutureProvider<bool>((ref) async {
+  final authState = ref.watch(authStateChangesProvider);
+  final userUid = authState.valueOrNull;
+  if (userUid == null) return false;
+
+  final accessToken = await SecureStorageService.getAccessToken();
+  final refreshToken = await SecureStorageService.getRefreshToken();
+  return accessToken != null && refreshToken != null;
+});
+
