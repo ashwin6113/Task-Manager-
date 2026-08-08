@@ -4,9 +4,7 @@ import '../constants/app_constants.dart';
 class SecureStorageService {
   SecureStorageService._();
 
-  static const _storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+  static const _storage = FlutterSecureStorage();
 
   static Future<String?> read(String key) => _storage.read(key: key);
 
