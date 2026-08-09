@@ -124,7 +124,7 @@ class _$TaskStateCopyWithImpl<$Res, $Val extends TaskState>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
-    ) as $Val);
+    ) as $Val,);
   }
 }
 
@@ -156,7 +156,7 @@ class __$$TaskStateImplCopyWithImpl<$Res>
     extends _$TaskStateCopyWithImpl<$Res, _$TaskStateImpl>
     implements _$$TaskStateImplCopyWith<$Res> {
   __$$TaskStateImplCopyWithImpl(
-      super._value, super._then,);
+      super._value, super._then);
 
   /// Create a copy of TaskState
   /// with the given fields replaced by the non-null parameter values.
@@ -225,7 +225,7 @@ class __$$TaskStateImplCopyWithImpl<$Res>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
-    ));
+    ),);
   }
 }
 
@@ -244,7 +244,7 @@ class _$TaskStateImpl implements _TaskState {
       this.filter = 'all',
       this.sortBy = 'created_at',
       this.sortAscending = false,
-      this.errorMessage})
+      this.errorMessage,})
       : _tasks = tasks,
         _displayTasks = displayTasks;
 

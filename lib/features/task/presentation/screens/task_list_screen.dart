@@ -11,6 +11,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/usecase.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../controllers/task_controller.dart';
+import '../providers/connectivity_provider.dart';
 import '../providers/task_provider.dart';
 import '../state/task_state.dart';
 import '../widgets/task_card.dart';
@@ -58,6 +59,12 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Instantiate/listen to SyncManager
+    ref.watch(syncManagerProvider);
+
+    final connectionStatus = ref.watch(connectivityStatusProvider);
+    final isOffline = connectionStatus == ConnectivityStatus.offline;
+
     final state = ref.watch(taskControllerProvider);
     final controller = ref.read(taskControllerProvider.notifier);
     final profile = ref.watch(userProfileProvider);
@@ -131,6 +138,28 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
       ),
       body: Column(
         children: [
+          if (isOffline)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              color: Colors.redAccent.shade400,
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.wifi_off_outlined, color: Colors.white, size: 18),
+                  SizedBox(width: 8),
+                  Text(
+                    'No Internet Connection — Operating Offline',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           // ── SEARCH & FILTERS ──
           Padding(
             padding: const EdgeInsets.symmetric(

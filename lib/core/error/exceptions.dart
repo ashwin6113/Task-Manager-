@@ -64,3 +64,31 @@ class ValidationException extends AppException {
   });
   final Map<String, List<String>>? fieldErrors;
 }
+
+/// Thrown when automatic task synchronization fails.
+class SyncException extends AppException {
+  const SyncException({
+    super.message = 'Failed to synchronize tasks with the server.',
+    super.code,
+    super.originalError,
+  });
+}
+
+/// Thrown when local queue operations fail.
+class QueueException extends AppException {
+  const QueueException({
+    super.message = 'Failed to process operation queue.',
+    super.code,
+    super.originalError,
+  });
+}
+
+/// Thrown when connectivity service or state encounters an error.
+class ConnectivityException extends AppException {
+  const ConnectivityException({
+    super.message = 'Failed to detect or update network connectivity status.',
+    super.code,
+    super.originalError,
+  });
+}
+

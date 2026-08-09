@@ -1,4 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../features/task/data/models/pending_operation_model.g.dart';
+import '../../features/task/data/models/task_hive_model.g.dart';
 
 class HiveService {
   HiveService._();
@@ -7,9 +9,9 @@ class HiveService {
   static Future<void> init() async {
     await Hive.initFlutter();
 
-    // TODO: Phase 2+ — Register Hive type adapters here:
-    // Hive.registerAdapter(TaskModelAdapter());
-    // Hive.registerAdapter(UserModelAdapter());
+    // Register Hive type adapters
+    Hive.registerAdapter(TaskHiveModelAdapter());
+    Hive.registerAdapter(PendingOperationModelAdapter());
   }
 
   /// Opens a typed Hive box. Returns an existing one if already open.
