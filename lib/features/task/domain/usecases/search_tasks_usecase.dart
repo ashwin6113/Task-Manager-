@@ -2,10 +2,10 @@ import '../../../../core/utils/usecase.dart';
 import '../entities/task_entity.dart';
 
 class SearchTasksParams {
-  final List<TaskEntity> tasks;
-  final String query;
 
   const SearchTasksParams({required this.tasks, required this.query});
+  final List<TaskEntity> tasks;
+  final String query;
 }
 
 class SearchTasksUseCase implements UseCase<List<TaskEntity>, SearchTasksParams> {

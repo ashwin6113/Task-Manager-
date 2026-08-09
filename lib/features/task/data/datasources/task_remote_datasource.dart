@@ -2,9 +2,9 @@ import '../../../../core/network/api_client.dart';
 import '../models/task_model.dart';
 
 class TaskRemoteDataSource {
-  final ApiClient _apiClient;
 
   TaskRemoteDataSource(this._apiClient);
+  final ApiClient _apiClient;
 
   Future<Map<String, dynamic>> getTasks({required int skip, required int limit}) async {
     final response = await _apiClient.get(

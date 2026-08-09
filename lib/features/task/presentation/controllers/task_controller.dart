@@ -10,13 +10,6 @@ import '../../domain/usecases/update_task_usecase.dart';
 import '../state/task_state.dart';
 
 class TaskController extends StateNotifier<TaskState> {
-  final FetchTasksUseCase _fetchTasksUseCase;
-  final CreateTaskUseCase _createTaskUseCase;
-  final UpdateTaskUseCase _updateTaskUseCase;
-  final DeleteTaskUseCase _deleteTaskUseCase;
-  final SearchTasksUseCase _searchTasksUseCase;
-  final FilterTasksUseCase _filterTasksUseCase;
-  final SortTasksUseCase _sortTasksUseCase;
 
   TaskController({
     required FetchTasksUseCase fetchTasksUseCase,
@@ -37,6 +30,13 @@ class TaskController extends StateNotifier<TaskState> {
     // Initial fetch
     fetchTasks();
   }
+  final FetchTasksUseCase _fetchTasksUseCase;
+  final CreateTaskUseCase _createTaskUseCase;
+  final UpdateTaskUseCase _updateTaskUseCase;
+  final DeleteTaskUseCase _deleteTaskUseCase;
+  final SearchTasksUseCase _searchTasksUseCase;
+  final FilterTasksUseCase _filterTasksUseCase;
+  final SortTasksUseCase _sortTasksUseCase;
 
   Future<void> fetchTasks({bool isRefresh = false}) async {
     if (state.status == TaskStatus.loading || state.status == TaskStatus.paginating) return;
@@ -73,9 +73,9 @@ class TaskController extends StateNotifier<TaskState> {
           updatedTasks = newTasks;
         } else {
           final Map<dynamic, TaskEntity> taskMap = {
-            for (var t in state.tasks) t.id ?? t.hashCode: t
+            for (final t in state.tasks) t.id ?? t.hashCode: t,
           };
-          for (var t in newTasks) {
+          for (final t in newTasks) {
             taskMap[t.id ?? t.hashCode] = t;
           }
           updatedTasks = taskMap.values.toList();

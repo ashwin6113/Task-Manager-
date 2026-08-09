@@ -3,7 +3,7 @@ part of 'task_state.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',);
 
 /// @nodoc
 mixin _$TaskState {
@@ -44,7 +44,7 @@ abstract class $TaskStateCopyWith<$Res> {
       String filter,
       String sortBy,
       bool sortAscending,
-      String? errorMessage});
+      String? errorMessage,});
 }
 
 /// @nodoc
@@ -132,7 +132,7 @@ class _$TaskStateCopyWithImpl<$Res, $Val extends TaskState>
 abstract class _$$TaskStateImplCopyWith<$Res>
     implements $TaskStateCopyWith<$Res> {
   factory _$$TaskStateImplCopyWith(
-          _$TaskStateImpl value, $Res Function(_$TaskStateImpl) then) =
+          _$TaskStateImpl value, $Res Function(_$TaskStateImpl) then,) =
       __$$TaskStateImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -148,7 +148,7 @@ abstract class _$$TaskStateImplCopyWith<$Res>
       String filter,
       String sortBy,
       bool sortAscending,
-      String? errorMessage});
+      String? errorMessage,});
 }
 
 /// @nodoc
@@ -156,7 +156,7 @@ class __$$TaskStateImplCopyWithImpl<$Res>
     extends _$TaskStateCopyWithImpl<$Res, _$TaskStateImpl>
     implements _$$TaskStateImplCopyWith<$Res> {
   __$$TaskStateImplCopyWithImpl(
-      super._value, super._then);
+      super._value, super._then,);
 
   /// Create a copy of TaskState
   /// with the given fields replaced by the non-null parameter values.
@@ -339,7 +339,7 @@ class _$TaskStateImpl implements _TaskState {
       filter,
       sortBy,
       sortAscending,
-      errorMessage);
+      errorMessage,);
 
   /// Create a copy of TaskState
   /// with the given fields replaced by the non-null parameter values.
@@ -363,7 +363,7 @@ abstract class _TaskState implements TaskState {
       final String filter,
       final String sortBy,
       final bool sortAscending,
-      final String? errorMessage}) = _$TaskStateImpl;
+      final String? errorMessage,}) = _$TaskStateImpl;
 
   @override
   TaskStatus get status;

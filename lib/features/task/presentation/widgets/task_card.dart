@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../domain/entities/task_entity.dart';
 import 'category_chip.dart';
 import 'priority_badge.dart';
 
 class TaskCard extends StatelessWidget {
-  final TaskEntity task;
-  final VoidCallback onToggle;
-  final VoidCallback onTap;
-  final VoidCallback onDelete;
 
   const TaskCard({
     super.key,
@@ -18,6 +13,10 @@ class TaskCard extends StatelessWidget {
     required this.onTap,
     required this.onDelete,
   });
+  final TaskEntity task;
+  final VoidCallback onToggle;
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +24,26 @@ class TaskCard extends StatelessWidget {
 
     // Styling properties based on selection / completion
     final backgroundColor = task.isCompleted 
-        ? const Color(0xFFD3E4FE) // Secondary-container / soft blue color for selection state
-        : AppColors.surfaceLowest;
+        ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
+        : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.24);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.md), // 16px spacing instead of lines
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: AppRadius.borderRadiusMd,
+        border: Border.all(
+          color: theme.brightness == Brightness.dark
+              ? theme.colorScheme.outline.withValues(alpha: 0.2)
+              : Colors.grey.shade300,
+        ),
         boxShadow: task.isCompleted
             ? null
             : [
                 BoxShadow(
-                  color: const Color(0xFF2C3437).withOpacity(0.04),
+                  color: theme.brightness == Brightness.dark 
+                      ? Colors.black.withValues(alpha: 0.2) 
+                      : const Color(0xFF2C3437).withValues(alpha: 0.04),
                   blurRadius: 16,
                   offset: const Offset(0, 8),
                 ),
@@ -55,9 +61,9 @@ class TaskCard extends StatelessWidget {
                 Checkbox(
                   value: task.isCompleted,
                   onChanged: (_) => onToggle(),
-                  activeColor: AppColors.primary,
+                  activeColor: theme.colorScheme.primary,
                   side: BorderSide(
-                    color: Colors.grey.shade400,
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                     width: 1.5,
                   ),
                 ),
@@ -72,7 +78,9 @@ class TaskCard extends StatelessWidget {
                           fontFamily: 'Inter',
                           fontWeight: FontWeight.w600,
                           decoration: task.isCompleted ? TextDecoration.lineThrough : null,
-                          color: task.isCompleted ? Colors.grey.shade600 : Colors.black87,
+                          color: task.isCompleted 
+                              ? theme.colorScheme.onSurface.withValues(alpha: 0.4) 
+                              : theme.colorScheme.onSurface,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -83,7 +91,7 @@ class TaskCard extends StatelessWidget {
                           task.description,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             fontFamily: 'Inter',
-                            color: Colors.grey.shade600,
+                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
                             decoration: task.isCompleted ? TextDecoration.lineThrough : null,
                           ),
                           maxLines: 2,
@@ -100,14 +108,14 @@ class TaskCard extends StatelessWidget {
                           Icon(
                             Icons.calendar_month_outlined,
                             size: 14,
-                            color: Colors.grey.shade500,
+                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                           ),
                           const SizedBox(width: AppSpacing.xs),
                           Text(
                             '${task.dueDate.day}/${task.dueDate.month}/${task.dueDate.year}',
                             style: theme.textTheme.labelSmall?.copyWith(
                               fontFamily: 'Inter',
-                              color: Colors.grey.shade500,
+                              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                               fontWeight: FontWeight.w500,
                             ),
                           ),

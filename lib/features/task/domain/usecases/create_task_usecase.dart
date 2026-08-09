@@ -5,9 +5,9 @@ import '../entities/task_entity.dart';
 import '../repositories/task_repository.dart';
 
 class CreateTaskUseCase implements UseCase<Either<AppException, TaskEntity>, TaskEntity> {
-  final TaskRepository _repository;
 
   CreateTaskUseCase(this._repository);
+  final TaskRepository _repository;
 
   @override
   Future<Either<AppException, TaskEntity>> call(TaskEntity task) {

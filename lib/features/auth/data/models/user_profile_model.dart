@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../../core/constants/type.dart';
 import '../../domain/entities/user_profile_entity.dart';
 
 part 'user_profile_model.freezed.dart';

@@ -39,7 +39,7 @@ class CustomButton extends StatelessWidget {
             ? null
             : [
                 BoxShadow(
-                  color: AppColors.primaryGradientStart.withOpacity(0.24),
+                  color: AppColors.primaryGradientStart.withValues(alpha: 0.24),
                   blurRadius: 16,
                   offset: const Offset(0, 8),
                 ),

@@ -1,11 +1,11 @@
 import '../../../../core/utils/usecase.dart';
 import '../entities/task_entity.dart';
 
-class FilterTasksParams {
-  final List<TaskEntity> tasks;
-  final String filter; // 'all', 'completed', 'pending'
+class FilterTasksParams { // 'all', 'completed', 'pending'
 
   const FilterTasksParams({required this.tasks, required this.filter});
+  final List<TaskEntity> tasks;
+  final String filter;
 }
 
 class FilterTasksUseCase implements UseCase<List<TaskEntity>, FilterTasksParams> {
