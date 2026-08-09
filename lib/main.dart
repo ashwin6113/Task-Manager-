@@ -6,6 +6,7 @@ import 'core/config/env_config.dart';
 import 'core/router/app_router.dart';
 import 'core/services/hive_service.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,12 +27,14 @@ class SmartTaskManagerApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
 
     return MaterialApp.router(
       title: 'Smart Task Manager',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
+      themeMode: themeMode,
       routerConfig: AppRouter.router,
     );
   }

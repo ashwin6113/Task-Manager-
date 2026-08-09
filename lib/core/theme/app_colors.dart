@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
+
+
+  const AppColors({
+    required this.success,
+    required this.warning,
+    required this.info,
+    required this.cardBackground,
+    required this.shimmerBase,
+    required this.shimmerHighlight,
+  });
   // ── Stitch Design Colors ──
   static const primary = Color(0xFF2563EB);
   static const primaryDark = Color(0xFF0053DC);
@@ -14,16 +24,6 @@ class AppColors extends ThemeExtension<AppColors> {
   static const surfaceContainer = Color(0xFFEAEFF2);
   static const surfaceLowest = Color(0xFFFFFFFF);
   static const outlineVariant = Color(0xFFACB3B7);
-
-
-  const AppColors({
-    required this.success,
-    required this.warning,
-    required this.info,
-    required this.cardBackground,
-    required this.shimmerBase,
-    required this.shimmerHighlight,
-  });
   final Color success;
   final Color warning;
   final Color info;

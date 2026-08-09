@@ -34,7 +34,7 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
   Future<void> saveTasks(List<TaskHiveModel> tasks) async {
     final box = await _tasksBox;
     final Map<int, TaskHiveModel> taskMap = {
-      for (var task in tasks) task.id ?? task.hashCode: task
+      for (final task in tasks) task.id ?? task.hashCode: task,
     };
     await box.putAll(taskMap);
   }

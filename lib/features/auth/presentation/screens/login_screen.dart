@@ -103,7 +103,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       borderRadius: AppRadius.borderRadiusLg,
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF2C3437).withOpacity(0.04),
+                          color: const Color(0xFF2C3437).withValues(alpha: 0.04),
                           blurRadius: 32,
                           offset: const Offset(0, 16),
                         ),

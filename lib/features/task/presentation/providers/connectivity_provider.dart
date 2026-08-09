@@ -18,7 +18,6 @@ final connectivityStatusProvider = StateNotifierProvider<ConnectivityStatusNotif
 });
 
 class ConnectivityStatusNotifier extends StateNotifier<ConnectivityStatus> {
-  final ConnectivityService _service;
 
   ConnectivityStatusNotifier(this._service) : super(ConnectivityStatus.online) {
     _checkInitial();
@@ -33,6 +32,7 @@ class ConnectivityStatusNotifier extends StateNotifier<ConnectivityStatus> {
       }
     });
   }
+  final ConnectivityService _service;
 
   Future<void> _checkInitial() async {
     final connected = await _service.isConnected;

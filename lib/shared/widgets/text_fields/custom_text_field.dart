@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -26,6 +25,8 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
@@ -33,24 +34,23 @@ class CustomTextField extends StatelessWidget {
       enabled: enabled,
       validator: validator,
       maxLines: maxLines,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 15,
-        color: Colors.black87,
+        color: theme.colorScheme.onSurface,
       ),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(
-          color: Colors.grey.shade600,
+          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
           fontSize: 14,
         ),
-        floatingLabelStyle: const TextStyle(
-          color: AppColors.primary,
+        floatingLabelStyle: TextStyle(
+          color: theme.colorScheme.primary,
           fontWeight: FontWeight.w600,
         ),
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: AppColors.surfaceLow,
-        hoverColor: AppColors.surfaceContainer,
+        fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
           vertical: AppSpacing.md,
@@ -65,22 +65,22 @@ class CustomTextField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.borderRadiusMd,
-          borderSide: const BorderSide(
-            color: AppColors.primary,
+          borderSide: BorderSide(
+            color: theme.colorScheme.primary,
             width: 1.5,
           ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadius.borderRadiusMd,
-          borderSide: const BorderSide(
-            color: Colors.redAccent,
+          borderSide: BorderSide(
+            color: theme.colorScheme.error,
             width: 1.5,
           ),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: AppRadius.borderRadiusMd,
-          borderSide: const BorderSide(
-            color: Colors.redAccent,
+          borderSide: BorderSide(
+            color: theme.colorScheme.error,
             width: 1.5,
           ),
         ),

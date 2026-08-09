@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_spacing.dart';
 
 class PriorityBadge extends StatelessWidget {
-  final String priority;
 
   const PriorityBadge({super.key, required this.priority});
+  final String priority;
 
   Color _getPriorityColor(BuildContext context) {
     switch (priority.toLowerCase()) {
@@ -40,7 +40,7 @@ class PriorityBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: AppRadius.borderRadiusSm,
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Text(
         priority,

@@ -5,10 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/app_router.dart';
-import '../../../../core/services/secure_storage_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/utils/usecase.dart';
+import '../../../../shared/widgets/empty_states/empty_state_view.dart';
+import '../../../../shared/widgets/error_states/error_state_view.dart';
+import '../../../../shared/widgets/loading/shimmer_loading.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../controllers/task_controller.dart';
 import '../providers/connectivity_provider.dart';
@@ -85,56 +86,43 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
+        leadingWidth: 56,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: GestureDetector(
+            onTap: () => context.pushNamed(RouteNames.profile),
+            child: Hero(
+              tag: 'profile_avatar',
+              child: CircleAvatar(
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                child: Text(
+                  profile != null && profile.name.isNotEmpty
+                      ? profile.name[0].toUpperCase()
+                      : 'U',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
         title: Text(
           profile != null ? '${profile.name}\'s Flow' : 'Daily Flow',
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Manrope',
             fontSize: 24,
             fontWeight: FontWeight.w800,
-            color: Colors.black87,
+            color: Theme.of(context).colorScheme.onSurface,
             letterSpacing: -0.5,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout_outlined, color: Colors.black87),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: AppRadius.borderRadiusMd,
-                  ),
-                  title: const Text('Logout'),
-                  content: const Text('Are you sure you want to logout?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('No'),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        Navigator.pop(context);
-                        await ref.read(logoutUseCaseProvider).call(const NoParams());
-                        await SecureStorageService.clearTokens();
-                        ref.read(userProfileProvider.notifier).state = null;
-                        if (context.mounted) {
-                          context.goNamed(RouteNames.login);
-                        }
-                      },
-                      child: const Text('Yes'),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
       ),
       body: Column(
         children: [
@@ -172,13 +160,13 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
                 TextField(
                   controller: _searchController,
                   onChanged: _onSearchChanged,
-                  style: const TextStyle(fontSize: 15, color: Colors.black87),
+                  style: TextStyle(fontSize: 15, color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
                     hintText: 'Search tasks by title...',
-                    hintStyle: TextStyle(color: Colors.grey.shade500),
-                    prefixIcon: Icon(Icons.search_outlined, color: Colors.grey.shade500, size: 20),
+                    hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
+                    prefixIcon: Icon(Icons.search_outlined, color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6), size: 20),
                     filled: true,
-                    fillColor: AppColors.surfaceLowest,
+                    fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.md,
                       vertical: AppSpacing.sm,
@@ -193,7 +181,7 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: AppRadius.borderRadiusMd,
-                      borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 1.5),
                     ),
                   ),
                 ),
@@ -212,7 +200,9 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
                               filter,
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                color: isSelected ? Colors.white : Colors.grey.shade700,
+                                color: isSelected 
+                                    ? Theme.of(context).colorScheme.onPrimary 
+                                    : Theme.of(context).colorScheme.onSurfaceVariant,
                                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                                 fontSize: 13,
                               ),
@@ -221,14 +211,14 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
                             onSelected: (_) {
                               controller.setFilter(filter);
                             },
-                            selectedColor: AppColors.primary,
-                            backgroundColor: AppColors.surfaceLowest,
-                            checkmarkColor: Colors.white,
+                            selectedColor: Theme.of(context).colorScheme.primary,
+                            backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                            checkmarkColor: Theme.of(context).colorScheme.onPrimary,
                             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xs),
                             shape: RoundedRectangleBorder(
                               borderRadius: AppRadius.borderRadiusFull,
                               side: BorderSide(
-                                color: isSelected ? Colors.transparent : Colors.grey.shade200,
+                                color: isSelected ? Colors.transparent : Theme.of(context).colorScheme.outline.withValues(alpha: 0.12),
                               ),
                             ),
                           ),
@@ -237,7 +227,7 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
                     ),
                     // Sorting Menu
                     PopupMenuButton<String>(
-                      icon: Icon(Icons.tune_outlined, color: Colors.grey.shade700),
+                      icon: Icon(Icons.tune_outlined, color: Theme.of(context).colorScheme.onSurface),
                       tooltip: 'Sort tasks',
                       shape: RoundedRectangleBorder(
                         borderRadius: AppRadius.borderRadiusMd,
@@ -334,50 +324,34 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
 
   Widget _buildListContent(TaskState state, TaskController controller) {
     if (state.status == TaskStatus.loading && state.tasks.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: AppColors.primary));
-    }
-
-    if (state.status == TaskStatus.error && state.tasks.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: AppSpacing.paddingMd,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                state.errorMessage ?? 'An error occurred',
-                style: const TextStyle(color: Colors.redAccent),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              ElevatedButton(
-                onPressed: () => controller.fetchTasks(),
-                child: const Text('Retry'),
-              ),
-            ],
+      return ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+        itemCount: 5,
+        itemBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.only(bottom: AppSpacing.md),
+          child: ShimmerLoading(
+            width: double.infinity,
+            height: 96,
+            borderRadius: AppRadius.borderRadiusMd.topLeft.x,
           ),
         ),
       );
     }
 
+    if (state.status == TaskStatus.error && state.tasks.isEmpty) {
+      return ErrorStateView(
+        errorMessage: state.errorMessage ?? 'An error occurred while loading tasks.',
+        onRetry: () => controller.fetchTasks(),
+      );
+    }
+
     if (state.displayTasks.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.assignment_outlined, size: 64, color: Colors.grey.shade300),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              'No tasks found',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 16,
-                color: Colors.grey.shade500,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
+      return EmptyStateView(
+        title: 'Your Flow is Clear',
+        description: 'You do not have any tasks matching your filters.',
+        icon: Icons.assignment_turned_in_outlined,
+        actionLabel: 'Refresh',
+        onActionPressed: () => controller.fetchTasks(),
       );
     }
 
@@ -399,18 +373,35 @@ class _TaskListScreenState extends ConsumerState<TaskListScreen> {
         }
 
         final task = state.displayTasks[index];
-        return TaskCard(
-          task: task,
-          onToggle: () => controller.toggleTaskCompletion(task),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => TaskFormScreen(task: task),
+        return TweenAnimationBuilder<double>(
+          duration: Duration(milliseconds: 200 + (index.clamp(0, 5) * 50)),
+          tween: Tween(begin: 0.0, end: 1.0),
+          curve: Curves.easeOut,
+          builder: (context, value, child) {
+            return Transform.translate(
+              offset: Offset(0, 16 * (1 - value)),
+              child: Opacity(
+                opacity: value,
+                child: child,
               ),
             );
           },
-          onDelete: () => controller.deleteTask(task.id!),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
+            child: TaskCard(
+              task: task,
+              onToggle: () => controller.toggleTaskCompletion(task),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TaskFormScreen(task: task),
+                  ),
+                );
+              },
+              onDelete: () => controller.deleteTask(task.id!),
+            ),
+          ),
         );
       },
     );

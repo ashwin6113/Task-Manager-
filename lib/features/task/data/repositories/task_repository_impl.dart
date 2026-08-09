@@ -12,15 +12,15 @@ import '../models/task_hive_model.dart';
 import '../models/task_model.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
-  final TaskRemoteDataSource _remoteDataSource;
-  final TaskLocalDataSource _localDataSource;
-  final ConnectivityService _connectivityService;
 
   TaskRepositoryImpl(
     this._remoteDataSource,
     this._localDataSource,
     this._connectivityService,
   );
+  final TaskRemoteDataSource _remoteDataSource;
+  final TaskLocalDataSource _localDataSource;
+  final ConnectivityService _connectivityService;
 
   @override
   Future<Either<AppException, Map<String, dynamic>>> getTasks({
@@ -35,7 +35,7 @@ class TaskRepositoryImpl implements TaskRepository {
         final total = result['total'] as int;
 
         final entities = remoteModels.map((m) => m.toEntity()).toList();
-        final hiveModels = entities.map((e) => TaskHiveModel.fromEntity(e)).toList();
+        final hiveModels = entities.map(TaskHiveModel.fromEntity).toList();
         
         // Cache in Hive Box
         await _localDataSource.saveTasks(hiveModels);
@@ -172,6 +172,6 @@ class TaskRepositoryImpl implements TaskRepository {
       title: '',
       description: '',
       dueDate: DateTime.now(),
-    ));
+    ),);
   }
 }

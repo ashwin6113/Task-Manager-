@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../shared/widgets/buttons/custom_button.dart';
 import '../../../../shared/widgets/text_fields/custom_text_field.dart';
@@ -51,12 +50,18 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       firstDate: DateTime.now().subtract(const Duration(days: 365)),
       lastDate: DateTime.now().add(const Duration(days: 3650)),
       builder: (context, child) {
+        final theme = Theme.of(context);
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppColors.primary,
-              onSurface: Colors.black87,
-            ),
+          data: theme.copyWith(
+            colorScheme: theme.brightness == Brightness.dark
+                ? ColorScheme.dark(
+                    primary: theme.colorScheme.primary,
+                    onSurface: theme.colorScheme.onSurface,
+                  )
+                : ColorScheme.light(
+                    primary: theme.colorScheme.primary,
+                    onSurface: theme.colorScheme.onSurface,
+                  ),
           ),
           child: child!,
         );
@@ -101,21 +106,22 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(taskControllerProvider);
+    final theme = Theme.of(context);
 
     // Common minimalist decoration for input fields in this form
     InputDecoration inputDecoration(String label) {
       return InputDecoration(
         labelText: label,
         labelStyle: TextStyle(
-          color: Colors.grey.shade600,
+          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
           fontSize: 14,
         ),
-        floatingLabelStyle: const TextStyle(
-          color: AppColors.primary,
+        floatingLabelStyle: TextStyle(
+          color: theme.colorScheme.primary,
           fontWeight: FontWeight.w600,
         ),
         filled: true,
-        fillColor: AppColors.surfaceLow,
+        fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
           vertical: AppSpacing.md,
@@ -130,8 +136,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.borderRadiusMd,
-          borderSide: const BorderSide(
-            color: AppColors.primary,
+          borderSide: BorderSide(
+            color: theme.colorScheme.primary,
             width: 1.5,
           ),
         ),
@@ -139,19 +145,19 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: theme.colorScheme.surface,
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black87),
+        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
         title: Text(
           widget.task == null ? 'Create Task' : 'Edit Task',
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Manrope',
             fontSize: 20,
             fontWeight: FontWeight.w800,
-            color: Colors.black87,
+            color: theme.colorScheme.onSurface,
             letterSpacing: -0.5,
           ),
         ),
@@ -167,11 +173,16 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
               Container(
                 padding: const EdgeInsets.all(AppSpacing.lg),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceLowest,
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
                   borderRadius: AppRadius.borderRadiusLg,
+                  border: Border.all(
+                    color: theme.colorScheme.outline.withValues(alpha: 0.12),
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF2C3437).withOpacity(0.04),
+                      color: theme.brightness == Brightness.dark 
+                          ? Colors.black.withValues(alpha: 0.2) 
+                          : const Color(0xFF2C3437).withValues(alpha: 0.04),
                       blurRadius: 32,
                       offset: const Offset(0, 16),
                     ),
@@ -200,14 +211,14 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
                     ),
                     const SizedBox(height: AppSpacing.md),
                     DropdownButtonFormField<String>(
-                      value: _priority,
+                      initialValue: _priority,
                       decoration: inputDecoration('Priority'),
                       icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                      dropdownColor: AppColors.surfaceLowest,
+                      dropdownColor: theme.colorScheme.surface,
                       items: _priorities.map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value, style: const TextStyle(fontSize: 15, color: Colors.black87)),
+                          child: Text(value, style: TextStyle(fontSize: 15, color: theme.colorScheme.onSurface)),
                         );
                       }).toList(),
                       onChanged: state.status == TaskStatus.submitting
@@ -215,21 +226,21 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
                           : (newValue) {
                               if (newValue != null) {
                                 setState(() {
-                                  _priority = newValue;
+                                    _priority = newValue;
                                 });
                               }
                             },
                     ),
                     const SizedBox(height: AppSpacing.md),
                     DropdownButtonFormField<String>(
-                      value: _category,
+                      initialValue: _category,
                       decoration: inputDecoration('Category'),
                       icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                      dropdownColor: AppColors.surfaceLowest,
+                      dropdownColor: theme.colorScheme.surface,
                       items: _categories.map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value, style: const TextStyle(fontSize: 15, color: Colors.black87)),
+                          child: Text(value, style: TextStyle(fontSize: 15, color: theme.colorScheme.onSurface)),
                         );
                       }).toList(),
                       onChanged: state.status == TaskStatus.submitting
@@ -253,9 +264,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
                           children: [
                             Text(
                               '${_dueDate.day}/${_dueDate.month}/${_dueDate.year}',
-                              style: const TextStyle(fontSize: 15, color: Colors.black87),
+                              style: TextStyle(fontSize: 15, color: theme.colorScheme.onSurface),
                             ),
-                            const Icon(Icons.calendar_month_outlined, color: AppColors.primary, size: 20),
+                            Icon(Icons.calendar_month_outlined, color: theme.colorScheme.primary, size: 20),
                           ],
                         ),
                       ),

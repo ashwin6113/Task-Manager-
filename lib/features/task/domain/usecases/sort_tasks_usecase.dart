@@ -2,15 +2,15 @@ import '../../../../core/utils/usecase.dart';
 import '../entities/task_entity.dart';
 
 class SortTasksParams {
-  final List<TaskEntity> tasks;
-  final String sortBy; // 'created_at', 'due_date', 'priority'
-  final bool ascending;
 
   const SortTasksParams({
     required this.tasks,
     required this.sortBy,
     required this.ascending,
   });
+  final List<TaskEntity> tasks;
+  final String sortBy; // 'created_at', 'due_date', 'priority'
+  final bool ascending;
 }
 
 class SortTasksUseCase implements UseCase<List<TaskEntity>, SortTasksParams> {
