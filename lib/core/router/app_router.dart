@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/auth/presentation/pages/login_page.dart';
-import '../../features/auth/presentation/pages/register_page.dart';
-import '../../features/dashboard/presentation/pages/dashboard_page.dart';
-import '../../features/settings/presentation/pages/settings_page.dart';
-import '../../features/splash/presentation/pages/splash_page.dart';
+import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/auth/presentation/screens/register_screen.dart';
+import '../../features/dashboard/presentation/pages/dashboard_screen.dart';
+import '../../features/settings/presentation/screen/settings_screen.dart';
+import '../../features/splash/presentation/screen/splash_screen.dart';
 import 'app_router_path.dart';
 
 export 'app_router_path.dart';

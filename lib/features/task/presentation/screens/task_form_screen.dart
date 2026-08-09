@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../shared/widgets/buttons/custom_button.dart';
 import '../../../../shared/widgets/text_fields/custom_text_field.dart';
@@ -8,7 +9,6 @@ import '../providers/task_provider.dart';
 import '../state/task_state.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {
-
   const TaskFormScreen({super.key, this.task});
   final TaskEntity? task;
 
@@ -50,6 +50,17 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       initialDate: _dueDate,
       firstDate: DateTime.now().subtract(const Duration(days: 365)),
       lastDate: DateTime.now().add(const Duration(days: 3650)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primary,
+              onSurface: Colors.black87,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != _dueDate) {
       setState(() {
@@ -90,111 +101,173 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(taskControllerProvider);
-    final theme = Theme.of(context);
+
+    // Common minimalist decoration for input fields in this form
+    InputDecoration inputDecoration(String label) {
+      return InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(
+          color: Colors.grey.shade600,
+          fontSize: 14,
+        ),
+        floatingLabelStyle: const TextStyle(
+          color: AppColors.primary,
+          fontWeight: FontWeight.w600,
+        ),
+        filled: true,
+        fillColor: AppColors.surfaceLow,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.md,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: AppRadius.borderRadiusMd,
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: AppRadius.borderRadiusMd,
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: AppRadius.borderRadiusMd,
+          borderSide: const BorderSide(
+            color: AppColors.primary,
+            width: 1.5,
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(widget.task == null ? 'Create Task' : 'Edit Task'),
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black87),
+        title: Text(
+          widget.task == null ? 'Create Task' : 'Edit Task',
+          style: const TextStyle(
+            fontFamily: 'Manrope',
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            color: Colors.black87,
+            letterSpacing: -0.5,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
-        padding: AppSpacing.paddingMd,
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              CustomTextField(
-                controller: _titleController,
-                label: 'Title',
-                enabled: state.status != TaskStatus.submitting,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Title is required';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: AppSpacing.md),
-              CustomTextField(
-                controller: _descController,
-                label: 'Description',
-                enabled: state.status != TaskStatus.submitting,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              DropdownButtonFormField<String>(
-                initialValue: _priority,
-                decoration: InputDecoration(
-                  labelText: 'Priority',
-                  border: OutlineInputBorder(
-                    borderRadius: AppRadius.borderRadiusMd,
-                  ),
-                ),
-                items: _priorities.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: state.status == TaskStatus.submitting
-                    ? null
-                    : (newValue) {
-                        if (newValue != null) {
-                          setState(() {
-                            _priority = newValue;
-                          });
-                        }
-                      },
-              ),
-              const SizedBox(height: AppSpacing.md),
-              DropdownButtonFormField<String>(
-                initialValue: _category,
-                decoration: InputDecoration(
-                  labelText: 'Category',
-                  border: OutlineInputBorder(
-                    borderRadius: AppRadius.borderRadiusMd,
-                  ),
-                ),
-                items: _categories.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: state.status == TaskStatus.submitting
-                    ? null
-                    : (newValue) {
-                        if (newValue != null) {
-                          setState(() {
-                            _category = newValue;
-                          });
-                        }
-                      },
-              ),
-              const SizedBox(height: AppSpacing.md),
-              InkWell(
-                onTap: state.status == TaskStatus.submitting ? null : () => _selectDueDate(context),
-                borderRadius: AppRadius.borderRadiusMd,
-                child: InputDecorator(
-                  decoration: InputDecoration(
-                    labelText: 'Due Date',
-                    border: OutlineInputBorder(
-                      borderRadius: AppRadius.borderRadiusMd,
+              // ── EDITORIAL WORKSPACE CARD ──
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceLowest,
+                  borderRadius: AppRadius.borderRadiusLg,
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF2C3437).withOpacity(0.04),
+                      blurRadius: 32,
+                      offset: const Offset(0, 16),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('${_dueDate.day}/${_dueDate.month}/${_dueDate.year}'),
-                      Icon(Icons.calendar_today, color: theme.colorScheme.primary),
-                    ],
-                  ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              CustomButton(
-                text: widget.task == null ? 'Create Task' : 'Save Changes',
-                isLoading: state.status == TaskStatus.submitting,
-                onPressed: _submit,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    CustomTextField(
+                      controller: _titleController,
+                      label: 'Task Title',
+                      enabled: state.status != TaskStatus.submitting,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Title is required';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    CustomTextField(
+                      controller: _descController,
+                      label: 'Description',
+                      maxLines: 3,
+                      enabled: state.status != TaskStatus.submitting,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    DropdownButtonFormField<String>(
+                      value: _priority,
+                      decoration: inputDecoration('Priority'),
+                      icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                      dropdownColor: AppColors.surfaceLowest,
+                      items: _priorities.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value, style: const TextStyle(fontSize: 15, color: Colors.black87)),
+                        );
+                      }).toList(),
+                      onChanged: state.status == TaskStatus.submitting
+                          ? null
+                          : (newValue) {
+                              if (newValue != null) {
+                                setState(() {
+                                  _priority = newValue;
+                                });
+                              }
+                            },
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    DropdownButtonFormField<String>(
+                      value: _category,
+                      decoration: inputDecoration('Category'),
+                      icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                      dropdownColor: AppColors.surfaceLowest,
+                      items: _categories.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value, style: const TextStyle(fontSize: 15, color: Colors.black87)),
+                        );
+                      }).toList(),
+                      onChanged: state.status == TaskStatus.submitting
+                          ? null
+                          : (newValue) {
+                              if (newValue != null) {
+                                setState(() {
+                                  _category = newValue;
+                                });
+                              }
+                            },
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    InkWell(
+                      onTap: state.status == TaskStatus.submitting ? null : () => _selectDueDate(context),
+                      borderRadius: AppRadius.borderRadiusMd,
+                      child: InputDecorator(
+                        decoration: inputDecoration('Due Date'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${_dueDate.day}/${_dueDate.month}/${_dueDate.year}',
+                              style: const TextStyle(fontSize: 15, color: Colors.black87),
+                            ),
+                            const Icon(Icons.calendar_month_outlined, color: AppColors.primary, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    CustomButton(
+                      text: widget.task == null ? 'Create Task' : 'Save Changes',
+                      isLoading: state.status == TaskStatus.submitting,
+                      onPressed: _submit,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

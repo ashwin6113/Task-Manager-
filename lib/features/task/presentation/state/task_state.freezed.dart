@@ -1,13 +1,4 @@
-// coverage:ignore-file
-// GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
-
 part of 'task_state.dart';
-
-// **************************************************************************
-// FreezedGenerator
-// **************************************************************************
 
 T _$identity<T>(T value) => value;
 
@@ -71,17 +62,17 @@ class _$TaskStateCopyWithImpl<$Res, $Val extends TaskState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? status = null,
-    Object? tasks = null,
-    Object? displayTasks = null,
-    Object? skip = null,
-    Object? limit = null,
-    Object? total = null,
-    Object? hasReachedMax = null,
-    Object? searchQuery = null,
-    Object? filter = null,
-    Object? sortBy = null,
-    Object? sortAscending = null,
+    Object? status,
+    Object? tasks,
+    Object? displayTasks,
+    Object? skip,
+    Object? limit,
+    Object? total,
+    Object? hasReachedMax,
+    Object? searchQuery,
+    Object? filter,
+    Object? sortBy,
+    Object? sortAscending,
     Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
@@ -165,25 +156,24 @@ class __$$TaskStateImplCopyWithImpl<$Res>
     extends _$TaskStateCopyWithImpl<$Res, _$TaskStateImpl>
     implements _$$TaskStateImplCopyWith<$Res> {
   __$$TaskStateImplCopyWithImpl(
-      _$TaskStateImpl _value, $Res Function(_$TaskStateImpl) _then)
-      : super(_value, _then);
+      super._value, super._then,);
 
   /// Create a copy of TaskState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? status = null,
-    Object? tasks = null,
-    Object? displayTasks = null,
-    Object? skip = null,
-    Object? limit = null,
-    Object? total = null,
-    Object? hasReachedMax = null,
-    Object? searchQuery = null,
-    Object? filter = null,
-    Object? sortBy = null,
-    Object? sortAscending = null,
+    Object? status,
+    Object? tasks,
+    Object? displayTasks,
+    Object? skip,
+    Object? limit,
+    Object? total,
+    Object? hasReachedMax,
+    Object? searchQuery,
+    Object? filter,
+    Object? sortBy,
+    Object? sortAscending,
     Object? errorMessage = freezed,
   }) {
     return _then(_$TaskStateImpl(

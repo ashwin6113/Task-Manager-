@@ -1,12 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-/// Intercepts successful responses for optional logging or transformation.
-///
-/// Use this to:
-/// • Log success metrics
-/// • Unwrap a standard API envelope (e.g., `{ "data": ..., "status": "ok" }`)
-/// • Normalize response shapes before they reach the data source layer
 class SuccessInterceptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {

@@ -60,12 +60,22 @@ final authStateChangesProvider = StreamProvider<String?>((ref) {
 final userProfileProvider = StateProvider<UserProfileEntity?>((ref) => null);
 
 final isSessionValidProvider = FutureProvider<bool>((ref) async {
-  final authState = ref.watch(authStateChangesProvider);
-  final userUid = authState.valueOrNull;
-  if (userUid == null) return false;
+  final user = ref.read(firebaseAuthProvider).currentUser;
+  if (user == null) return false;
 
-  final accessToken = await SecureStorageService.getAccessToken();
-  final refreshToken = await SecureStorageService.getRefreshToken();
-  return accessToken != null && refreshToken != null;
+  var accessToken = await SecureStorageService.getAccessToken();
+  var refreshToken = await SecureStorageService.getRefreshToken();
+
+  if (accessToken == null || refreshToken == null) {
+    accessToken = await user.getIdToken() ?? '';
+    refreshToken = user.refreshToken ?? '';
+    await SecureStorageService.saveTokens(
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    );
+  }
+
+  return accessToken.isNotEmpty && refreshToken.isNotEmpty;
 });
+
 

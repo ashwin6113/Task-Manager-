@@ -1,9 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-/// Manages Hive initialization and box registration.
-///
-/// Call [HiveService.init] once in `main()` before `runApp`.
-/// Each feature registers its own adapters through this service.
 class HiveService {
   HiveService._();
 

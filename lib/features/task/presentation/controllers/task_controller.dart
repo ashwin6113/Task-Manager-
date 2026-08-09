@@ -85,26 +85,33 @@ class TaskController extends StateNotifier<TaskState> {
   }
 
   Future<void> _applyClientProcessing() async {
-    // Apply search
-    var processed = await _searchTasksUseCase(
-      SearchTasksParams(tasks: state.tasks, query: state.searchQuery),
-    );
+    try {
+      // Apply search
+      var processed = await _searchTasksUseCase(
+        SearchTasksParams(tasks: state.tasks, query: state.searchQuery),
+      );
 
-    // Apply filter
-    processed = await _filterTasksUseCase(
-      FilterTasksParams(tasks: processed, filter: state.filter),
-    );
+      // Apply filter
+      processed = await _filterTasksUseCase(
+        FilterTasksParams(tasks: processed, filter: state.filter),
+      );
 
-    // Apply sort
-    processed = await _sortTasksUseCase(
-      SortTasksParams(
-        tasks: processed,
-        sortBy: state.sortBy,
-        ascending: state.sortAscending,
-      ),
-    );
+      // Apply sort
+      processed = await _sortTasksUseCase(
+        SortTasksParams(
+          tasks: processed,
+          sortBy: state.sortBy,
+          ascending: state.sortAscending,
+        ),
+      );
 
-    state = state.copyWith(displayTasks: processed);
+      state = state.copyWith(displayTasks: processed);
+    } catch (e) {
+      state = state.copyWith(
+        status: TaskStatus.error,
+        errorMessage: 'Error processing tasks: ${e.toString()}',
+      );
+    }
   }
 
   Future<void> setSearch(String query) async {
