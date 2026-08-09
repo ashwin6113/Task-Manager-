@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../core/services/secure_storage_service.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../domain/entities/user_profile_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -32,6 +33,14 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
       );
       final uid = credential.user!.uid;
+
+      // Extract and save tokens to SecureStorage
+      final accessToken = await credential.user!.getIdToken() ?? '';
+      final refreshToken = credential.user!.refreshToken ?? '';
+      await SecureStorageService.saveTokens(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
 
       final profileModel = await _profileDataSource.getUserProfile(uid);
       if (profileModel != null) {
@@ -66,6 +75,14 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
       );
       final uid = credential.user!.uid;
+
+      // Extract and save tokens to SecureStorage
+      final accessToken = await credential.user!.getIdToken() ?? '';
+      final refreshToken = credential.user!.refreshToken ?? '';
+      await SecureStorageService.saveTokens(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
 
       final newProfile = UserProfileEntity(
         uid: uid,

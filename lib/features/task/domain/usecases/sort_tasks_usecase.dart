@@ -16,7 +16,8 @@ class SortTasksParams {
 class SortTasksUseCase implements UseCase<List<TaskEntity>, SortTasksParams> {
   const SortTasksUseCase();
 
-  int _getPriorityValue(String priority) {
+  int _getPriorityValue(String? priority) {
+    if (priority == null) return 1;
     switch (priority.toLowerCase()) {
       case 'high':
         return 3;

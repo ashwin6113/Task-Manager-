@@ -4,7 +4,7 @@ import 'app_colors.dart';
 class AppTheme {
   AppTheme._();
 
-  static const Color _seedColor = Color(0xFF6750A4);
+  static const Color _seedColor = AppColors.primary;
 
   // ──────────────────────────────────────────────
   //  LIGHT THEME
@@ -15,7 +15,7 @@ class AppTheme {
     colorScheme: ColorScheme.fromSeed(
       seedColor: _seedColor,
     ),
-    fontFamily: 'Roboto',
+    fontFamily: 'Inter',
     appBarTheme: const AppBarTheme(
       centerTitle: true,
       elevation: 0,
