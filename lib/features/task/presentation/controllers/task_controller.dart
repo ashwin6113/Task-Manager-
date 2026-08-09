@@ -68,14 +68,26 @@ class TaskController extends StateNotifier<TaskState> {
         final List<TaskEntity> newTasks = data['tasks'] as List<TaskEntity>;
         final int total = data['total'] as int;
 
-        final updatedTasks = isRefresh ? newTasks : [...state.tasks, ...newTasks];
+        List<TaskEntity> updatedTasks;
+        if (isRefresh) {
+          updatedTasks = newTasks;
+        } else {
+          final Map<dynamic, TaskEntity> taskMap = {
+            for (var t in state.tasks) t.id ?? t.hashCode: t
+          };
+          for (var t in newTasks) {
+            taskMap[t.id ?? t.hashCode] = t;
+          }
+          updatedTasks = taskMap.values.toList();
+        }
+
         final hasReachedMax = updatedTasks.length >= total || newTasks.isEmpty;
 
         state = state.copyWith(
           status: updatedTasks.isEmpty ? TaskStatus.empty : TaskStatus.loaded,
           tasks: updatedTasks,
           total: total,
-          skip: state.skip + state.limit,
+          skip: isRefresh ? newTasks.length : state.skip + newTasks.length,
           hasReachedMax: hasReachedMax,
         );
 
@@ -141,7 +153,7 @@ class TaskController extends StateNotifier<TaskState> {
       (newTask) {
         state = state.copyWith(
           status: TaskStatus.loaded,
-          tasks: [newTask, ...state.tasks],
+          tasks: [newTask, ...state.tasks.where((t) => t.id != newTask.id || t.id == null)],
         );
         _applyClientProcessing();
         return true;

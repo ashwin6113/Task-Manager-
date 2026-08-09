@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../core/network/api_client.dart';
+import '../../data/datasources/task_local_datasource.dart';
 import '../../data/datasources/task_remote_datasource.dart';
 import '../../data/repositories/task_repository_impl.dart';
+import '../../data/services/sync_manager.dart';
 import '../../domain/repositories/task_repository.dart';
 import '../../domain/usecases/create_task_usecase.dart';
 import '../../domain/usecases/delete_task_usecase.dart';
@@ -11,6 +14,7 @@ import '../../domain/usecases/search_tasks_usecase.dart';
 import '../../domain/usecases/sort_tasks_usecase.dart';
 import '../../domain/usecases/update_task_usecase.dart';
 import '../controllers/task_controller.dart';
+import '../providers/connectivity_provider.dart';
 import '../state/task_state.dart';
 
 // ── Reusable API Client ──
@@ -21,9 +25,18 @@ final taskRemoteDataSourceProvider = Provider<TaskRemoteDataSource>((ref) {
   return TaskRemoteDataSource(ref.watch(apiClientProvider));
 });
 
+// ── Local DataSource ──
+final taskLocalDataSourceProvider = Provider<TaskLocalDataSource>((ref) {
+  return TaskLocalDataSourceImpl();
+});
+
 // ── Repository ──
 final taskRepositoryProvider = Provider<TaskRepository>((ref) {
-  return TaskRepositoryImpl(ref.watch(taskRemoteDataSourceProvider));
+  return TaskRepositoryImpl(
+    ref.watch(taskRemoteDataSourceProvider),
+    ref.watch(taskLocalDataSourceProvider),
+    ref.watch(connectivityServiceProvider),
+  );
 });
 
 // ── Use Cases ──
@@ -66,4 +79,14 @@ final taskControllerProvider = StateNotifierProvider<TaskController, TaskState>(
     filterTasksUseCase: ref.watch(filterTasksUseCaseProvider),
     sortTasksUseCase: ref.watch(sortTasksUseCaseProvider),
   );
+});
+
+final syncManagerProvider = Provider<SyncManager>((ref) {
+  final syncManager = SyncManager(
+    remoteDataSource: ref.watch(taskRemoteDataSourceProvider),
+    localDataSource: ref.watch(taskLocalDataSourceProvider),
+    connectivityService: ref.watch(connectivityServiceProvider),
+  );
+  syncManager.start();
+  return syncManager;
 });
