@@ -46,6 +46,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
+    final theme = Theme.of(context);
 
     ref.listen<AuthState>(authControllerProvider, (previous, next) {
       if (next.status == AuthStatus.authenticated) {
@@ -66,7 +67,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -78,13 +79,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // ── EDITORIAL HEADER ──
-                  const Text(
+                  Text(
                     'Create account.',
                     style: TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 36,
                       fontWeight: FontWeight.w800,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                       height: 1.1,
                       letterSpacing: -1.0,
                     ),
@@ -95,7 +96,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 16,
-                      color: Colors.grey.shade600,
+                      color: theme.colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
@@ -105,7 +106,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   Container(
                     padding: const EdgeInsets.all(AppSpacing.lg),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceLowest,
+                      color: theme.colorScheme.surfaceContainerLowest,
                       borderRadius: AppRadius.borderRadiusLg,
                       boxShadow: [
                         BoxShadow(
@@ -154,7 +155,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                              color: Colors.grey.shade600,
+                              color: theme.colorScheme.onSurfaceVariant,
                               size: 20,
                             ),
                             onPressed: () {
@@ -208,7 +209,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                         'Already have an account?',
                         style: TextStyle(
                           fontFamily: 'Inter',
-                          color: Colors.grey.shade600,
+                          color: theme.colorScheme.onSurfaceVariant,
                           fontSize: 14,
                         ),
                       ),

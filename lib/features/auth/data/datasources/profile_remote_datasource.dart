@@ -11,16 +11,28 @@ class ProfileRemoteDataSource {
       _firestore.collection('users');
 
   Future<UserProfileModel?> getUserProfile(String uid) async {
-    final doc = await _usersCollection.doc(uid).get();
-    if (!doc.exists || doc.data() == null) return null;
-    return UserProfileModel.fromJson(doc.data()!..putIfAbsent('uid', () => uid));
+    try {
+      final doc = await _usersCollection.doc(uid).get();
+      if (!doc.exists || doc.data() == null) return null;
+      return UserProfileModel.fromJson(doc.data()!..putIfAbsent('uid', () => uid));
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<void> createUserProfile(UserProfileModel profile) async {
-    await _usersCollection.doc(profile.uid).set(profile.toJson());
+    try {
+      await _usersCollection.doc(profile.uid).set(profile.toJson(), SetOptions(merge: true));
+    } catch (e) {
+      // Ignored so auth flow can continue even if Firestore is offline
+    }
   }
 
   Future<void> updateUserProfile(UserProfileModel profile) async {
-    await _usersCollection.doc(profile.uid).update(profile.toJson());
+    try {
+      await _usersCollection.doc(profile.uid).update(profile.toJson());
+    } catch (e) {
+      // Ignored if offline
+    }
   }
 }

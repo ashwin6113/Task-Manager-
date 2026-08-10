@@ -40,6 +40,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
+    final theme = Theme.of(context);
 
     ref.listen<AuthState>(authControllerProvider, (previous, next) {
       if (next.status == AuthStatus.authenticated) {
@@ -60,7 +61,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -72,13 +73,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // ── EDITORIAL HEADER ──
-                  const Text(
+                  Text(
                     'Welcome back.',
                     style: TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 36,
                       fontWeight: FontWeight.w800,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                       height: 1.1,
                       letterSpacing: -1.0,
                     ),
@@ -89,7 +90,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 16,
-                      color: Colors.grey.shade600,
+                      color: theme.colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.normal,
                     ),
                   ),
@@ -99,7 +100,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   Container(
                     padding: const EdgeInsets.all(AppSpacing.lg),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceLowest,
+                      color: theme.colorScheme.surfaceContainerLowest,
                       borderRadius: AppRadius.borderRadiusLg,
                       boxShadow: [
                         BoxShadow(
@@ -136,7 +137,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                              color: Colors.grey.shade600,
+                              color: theme.colorScheme.onSurfaceVariant,
                               size: 20,
                             ),
                             onPressed: () {
@@ -174,7 +175,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         "Don't have an account?",
                         style: TextStyle(
                           fontFamily: 'Inter',
-                          color: Colors.grey.shade600,
+                          color: theme.colorScheme.onSurfaceVariant,
                           fontSize: 14,
                         ),
                       ),
