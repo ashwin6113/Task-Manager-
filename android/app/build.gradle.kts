@@ -1,5 +1,8 @@
 plugins {
     id("com.android.application")
+    // START: FlutterFire Configuration
+    id("com.google.gms.google-services")
+    // END: FlutterFire Configuration
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
@@ -28,6 +31,25 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    flavorDimensions.add("default")
+
+    productFlavors {
+        create("dev") {
+            dimension = "default"
+            applicationIdSuffix = ".dev"
+            resValue("string", "app_name", "Smart Task Manager [DEV]")
+        }
+        create("uat") {
+            dimension = "default"
+            applicationIdSuffix = ".uat"
+            resValue("string", "app_name", "Smart Task Manager [UAT]")
+        }
+        create("prod") {
+            dimension = "default"
+            resValue("string", "app_name", "Smart Task Manager")
+        }
     }
 
     buildTypes {
