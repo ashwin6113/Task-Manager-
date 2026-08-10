@@ -36,7 +36,7 @@ lib/
 The app supports dynamic multi-environment configuration (Development, UAT, and Production) using external JSON resource files.
 
 ### Configuration Files
-Located in `.environment/`:
+Located in `environment/`:
 - `dev.json`
 - `uat.json`
 - `prod.json`

@@ -44,7 +44,13 @@ class AuthRepositoryImpl implements AuthRepository {
         refreshToken: refreshToken,
       );
 
-      final profileModel = await _profileDataSource.getUserProfile(uid);
+      UserProfileModel? profileModel;
+      try {
+        profileModel = await _profileDataSource.getUserProfile(uid);
+      } catch (_) {
+        profileModel = null;
+      }
+
       if (profileModel != null) {
         return profileModel.toEntity();
       }
@@ -52,11 +58,17 @@ class AuthRepositoryImpl implements AuthRepository {
       // Automatically create Firestore profile if authenticated but missing profile document
       final newProfile = UserProfileEntity(
         uid: uid,
-        name: credential.user!.displayName ?? email.split('@').first,
+        name: credential.user!.displayName ?? (email.isNotEmpty ? email.split('@').first : 'User'),
         email: email,
         createdAt: DateTime.now(),
       );
-      await _profileDataSource.createUserProfile(UserProfileModel.fromEntity(newProfile));
+
+      try {
+        await _profileDataSource.createUserProfile(UserProfileModel.fromEntity(newProfile));
+      } catch (_) {
+        // Fallback: Firestore document creation failed or is offline
+      }
+
       return newProfile;
     } on FirebaseAuthException catch (e) {
       throw _mapFirebaseAuthException(e);
@@ -92,7 +104,13 @@ class AuthRepositoryImpl implements AuthRepository {
         email: email,
         createdAt: DateTime.now(),
       );
-      await _profileDataSource.createUserProfile(UserProfileModel.fromEntity(newProfile));
+
+      try {
+        await _profileDataSource.createUserProfile(UserProfileModel.fromEntity(newProfile));
+      } catch (_) {
+        // Non-blocking if offline
+      }
+
       return newProfile;
     } on FirebaseAuthException catch (e) {
       throw _mapFirebaseAuthException(e);
